@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Incident SUBMISSION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6e00ff;
+            --primary-dark: #4d00b5;
+            --secondary: #00f0ff;
+            --accent: #ff00aa;
+            --dark: #0a0a14;
+            --dark-light: #1a1a2e;
+            --light: #f0f4ff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --warning: #ff9100;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--dark), var(--dark-light));
+            color: var(--light);
+            padding: 2rem;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Holographic grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridScroll 120s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gridScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 1000px; }
+        }
+        
+        /* Floating cyber orbs */
+        .cyber-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -50px;
+            left: -50px;
+        }
+        
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--warning);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 20px); }
+        }
+        
+        /* Main container */
+        .complaint-terminal {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .complaint-terminal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle, 
+                rgba(110, 0, 255, 0.1) 0%, 
+                rgba(255, 145, 0, 0.05) 70%, 
+                transparent 100%
+            );
+            animation: rotate 60s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Header section */
+        .terminal-header {
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .terminal-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: transparent;
+            background: linear-gradient(90deg, var(--warning), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .access-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 145, 0, 0.2);
+            border: 1px solid var(--warning);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--warning);
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Form elements */
+        .complaint-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            letter-spacing: 0.5px;
+        }
+        
+        .input-field {
+            position: relative;
+        }
+        
+        .input-field i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 14px 14px 44px;
+            background: rgba(10, 10, 20, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--warning);
+            box-shadow: 0 0 0 2px rgba(255, 145, 0, 0.2);
+        }
+        
+        /* File upload styling */
+        .file-upload {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border: 2px dashed var(--glass-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-label:hover {
+            border-color: var(--warning);
+            background: rgba(255, 145, 0, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload-text {
+            font-size: 0.9rem;
+            color: var(--light);
+            text-align: center;
+        }
+        
+        .file-upload-text span {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        /* Submit button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--warning), #ff6d00);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 145, 0, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 145, 0, 0.4);
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Security footer */
+        .security-footer {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+        }
+        
+        /* Pulse animation */
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(255, 145, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .complaint-terminal {
+                padding: 1.8rem;
+            }
+            
+            .terminal-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="cyber-orb orb-1"></div>
+    <div class="cyber-orb orb-2"></div>
+    
+    <div class="complaint-terminal pulse">
+        <div class="terminal-header">
+            <h1>COMPLAINT REPORT PORTAL</h1>
+            <div class="access-badge">CITIZEN CASE SUBMISSION</div>
+        </div>
+        
+        <form method="post" action="/citizen/<%= cid %>/new_complaint" enctype="multipart/form-data" class="complaint-form">
+            <div class="input-group">
+                <label for="complaint">COMPLAINT DESCRIPTION</label>
+                <div class="input-field">
+                    <i class="fas fa-comment-alt"></i>
+                    <input type="text" name="complaint" id="complaint" placeholder="Describe the incident in detail" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="location">COMPLAINT LOCATION</label>
+                <div class="input-field">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" name="location" id="location" placeholder="Exact location or coordinates" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>EVIDENCE UPLOAD</label>
+                <div class="file-upload">
+                    <label class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                        <div class="file-upload-text">
+                            Drag & drop files or <span>browse</span><br>
+                            <small>(Supports JPG, PNG up to 5MB)</small>
+                        </div>
+                        <input type="file" name="photo" id="photo" class="file-upload-input" accept="image/*">
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> SUBMIT  REPORT
+            </button>
+        </form>
+        
+        <div class="security-footer">
+            <i class="fas fa-shield-alt"></i> All submissions are encrypted and protected under Civic Protection Act<br>
+            False reports may be subject to legal action
+        </div>
+    </div>
+</body>
+</html>

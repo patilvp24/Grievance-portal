@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIVIC PORTAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6e00ff;
+            --primary-dark: #4d00b5;
+            --secondary: #00f0ff;
+            --accent: #ff00aa;
+            --dark: #0a0a14;
+            --dark-light: #1a1a2e;
+            --light: #f0f4ff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --success: #00e676;
+            --warning: #ff9100;
+            --danger: #ff1744;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--dark), var(--dark-light));
+            color: var(--light);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        /* Holographic grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridScroll 120s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gridScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 1000px; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle, 
+                rgba(110, 0, 255, 0.1) 0%, 
+                rgba(0, 240, 255, 0.05) 70%, 
+                transparent 100%
+            );
+            animation: rotate 60s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Header section */
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .user-info h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .user-id {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            letter-spacing: 1px;
+        }
+        
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card.pending::after {
+            background: var(--danger);
+        }
+        
+        .stat-card.resolved::after {
+            background: var(--success);
+        }
+        
+        .stat-card.total::after {
+            background: var(--primary);
+        }
+        
+        .stat-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card.pending .stat-value {
+            color: var(--danger);
+        }
+        
+        .stat-card.resolved .stat-value {
+            color: var(--success);
+        }
+        
+        .stat-card.total .stat-value {
+            color: var(--secondary);
+        }
+        
+        .stat-trend {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .trend-up {
+            color: var(--success);
+        }
+        
+        .trend-down {
+            color: var(--danger);
+        }
+        
+        /* Action button */
+        .action-btn {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(110, 0, 255, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 0, 255, 0.4);
+        }
+        
+        /* Complaints table */
+        .complaints-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+        }
+        
+        .complaints-table thead th {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .complaints-table th:first-child {
+            border-top-left-radius: 12px;
+        }
+        
+        .complaints-table th:last-child {
+            border-top-right-radius: 12px;
+        }
+        
+        .complaints-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--light);
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+        
+        .complaints-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-1px);
+        }
+        
+        /* Status badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-solved {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(255, 23, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+        }
+        
+        /* Photo link */
+        .photo-link {
+            color: var(--secondary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .photo-link:hover {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+        
+        .no-photo {
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+        
+        /* Timestamp */
+        .timestamp {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .user-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .complaints-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    
+    <div class="container">
+        <div class="user-header">
+            <div class="user-info">
+                <h3>CITIZEN PORTAL ACCESS</h3>
+                <span class="user-id"><i class="fas fa-user-circle"></i> <%= citizen.email %></span>
+                <span class="user-id"><i class="fas fa-id-card"></i> <%= citizen.cid %></span>
+            </div>
+            
+            <form action="/citizen/<%= citizen.cid %>/new_complaint" method="get">
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-plus-circle"></i>  NEW COMPLAINT
+                </button>
+            </form>
+        </div>
+        
+        <!-- Status Cards Section -->
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <div class="stat-title">
+                    <i class="fas fa-hourglass-half"></i>
+                    PENDING 
+                </div>
+                <div class="stat-value">
+                    <%= complaints.filter(c => c.status === 'Pending').length %>
+                </div>
+                
+            </div>
+            
+            <div class="stat-card resolved">
+                <div class="stat-title">
+                    <i class="fas fa-check-circle"></i>
+                    RESOLVED 
+                </div>
+                <div class="stat-value">
+                    <%= complaints.filter(c => c.status === 'Solved').length %>
+                </div>
+                
+            </div>
+            
+            <div class="stat-card total">
+                <div class="stat-title">
+                    <i class="fas fa-list-ol"></i>
+                    TOTAL 
+                </div>
+                <div class="stat-value">
+                    <%= complaints.length %>
+                </div>
+               
+            </div>
+        </div>
+        
+        <table class="complaints-table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-comment-alt"></i> DESCRIPTION</th>
+                    <th><i class="fas fa-map-marker-alt"></i> LOCATION</th>
+                    <th><i class="fas fa-tasks"></i> STATUS</th>
+                    <th><i class="fas fa-clock"></i> SUBMITTED</th>
+                    <th><i class="fas fa-camera"></i> EVIDENCE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% complaints.forEach(function(complaint) { %>
+                    <tr>
+                        <td>#<%= complaint.id %></td>
+                        <td><%= complaint.complaint %></td>
+                        <td><i class="fas fa-map-pin" style="color: var(--secondary); margin-right: 5px;"></i> <%= complaint.location %></td>
+                        <td>
+                            <span class="status-badge <%= complaint.status === 'Solved' ? 'status-solved' : 'status-pending' %>">
+                                <i class="fas <%= complaint.status === 'Solved' ? 'fa-check-circle' : 'fa-hourglass-half' %>"></i>
+                                <%= complaint.status %>
+                            </span>
+                        </td>
+                        <td class="timestamp"><i class="far fa-calendar-alt"></i> <%= new Date(complaint.created_at).toLocaleString() %></td>
+                        <td>
+                            <% if (complaint.photo) { %>
+                                <a href="<%= complaint.photo %>" target="_blank" class="photo-link">
+                                    <i class="fas fa-external-link-alt"></i> View
+                                </a>
+                            <% } else { %>
+                                <span class="no-photo">No Evidence</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

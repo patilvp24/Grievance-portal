@@ -1,0 +1,39 @@
+create DATABASE complaint_portal;
+
+use complaint_portal;
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role varchar(255) DEFAULT 'citizen',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO users(name,email,password) VALUES("vedant","vedantye.com","1234");
+
+CREATE TABLE authorities (
+    authorityid INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role varchar(255) DEFAULT 'citizen',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO authorities(username,email,password) VALUES("Parth","abc@gmail.com","parth");
+
+
+CREATE TABLE complaint_history (
+    complaint_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL
+);
+
+CREATE TABLE complaint_store (
+complaintid int auto_increment,
+userid int not null,
+state varchar(50),
+city varchar(50),
+complaint varchar(255),
+status varchar(50),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,primary key(complaintid));
